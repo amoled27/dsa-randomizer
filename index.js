@@ -6,9 +6,20 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const allowedOrigins = [
+    "https://smlq4q.csb.app/"
+]
+
+const corsOptions = {
+    origin: [allowedOrigins],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+    credentials: true, 
+    optionsSuccessStatus: 204 
+  };
+
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 // MongoDB Atlas connection
 const MONGODB_URI = process.env.MONGODB_URI;
