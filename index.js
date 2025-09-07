@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB Atlas connection
-const MONGODB_URI = 'mongodb+srv://xboost:wsMtIoP8sU7D7ZmR@cluster0.qqwq4.mongodb.net/striver-dsa?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB Atlas'))

@@ -19,9 +19,10 @@
   "author": "amodshinde1995@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "^4.18.2",
-    "mongoose": "^7.5.0",
-    "cors": "^2.8.5"
+    "mongoose": "^7.5.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
