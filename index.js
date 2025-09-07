@@ -19,7 +19,7 @@ const corsOptions = {
 
 // Middleware
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 
 // MongoDB Atlas connection
 const MONGODB_URI = process.env.MONGODB_URI;
