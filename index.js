@@ -350,6 +350,73 @@ app.get('/api/questions/stats/overview', async (req, res) => {
   }
 });
 
+
+// GET: Get a random question
+app.get('/api/questions/random/question', async (req, res) => {
+    try {
+      const {
+        step_no,
+        difficulty,
+        completed,
+        review,
+        exclude_completed = false
+      } = req.query;
+  
+      // Build filter object
+      const filter = {};
+      
+      // Apply filters if provided
+      if (step_no) filter.step_no = parseInt(step_no);
+      if (difficulty !== undefined) filter.difficulty = parseInt(difficulty);
+      if (completed !== undefined) filter.completed = completed === 'true';
+      if (review !== undefined) filter.review = review === 'true';
+      
+      // Exclude completed questions if requested
+      if (exclude_completed === 'true') {
+        filter.completed = false;
+      }
+  
+      // Get total count with filters
+      const totalQuestions = await Question.countDocuments(filter);
+      
+      if (totalQuestions === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'No questions found matching the criteria'
+        });
+      }
+  
+      // Generate random skip value
+      const randomSkip = Math.floor(Math.random() * totalQuestions);
+      
+      // Get random question
+      const randomQuestion = await Question.findOne(filter).skip(randomSkip);
+  
+      res.json({
+        success: true,
+        data: randomQuestion,
+        meta: {
+          totalMatchingQuestions: totalQuestions,
+          appliedFilters: {
+            ...(step_no && { step_no: parseInt(step_no) }),
+            ...(difficulty !== undefined && { difficulty: parseInt(difficulty) }),
+            ...(completed !== undefined && { completed: completed === 'true' }),
+            ...(review !== undefined && { review: review === 'true' }),
+            ...(exclude_completed === 'true' && { exclude_completed: true })
+          }
+        }
+      });
+  
+    } catch (error) {
+      console.error('Error fetching random question:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error fetching random question',
+        error: error.message
+      });
+    }
+  });
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
